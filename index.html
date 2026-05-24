@@ -7,99 +7,199 @@
     
     <link rel="manifest" href="manifest.json">
     
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
-        body { background-color: #FAF6F0; color: #2E1A1C; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .app-container { width: 100%; max-width: 400px; background-color: #FAF6F0; border: 4px solid #2E1A1C; border-radius: 40px; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .card { background-color: #FFFFFF; border-radius: 24px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(46, 26, 28, 0.05); }
-        h2 { color: #2E1A1C; font-size: 22px; text-align: center; font-weight: 700; margin-bottom: 8px; }
-        .gold-line { width: 100%; height: 2px; background-color: #C5A880; margin-bottom: 25px; }
-        h3 { color: #2E1A1C; font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #EADCC9; padding-bottom: 5px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 14px; font-weight: 600; color: #5A4A42; margin-bottom: 8px; }
-        input { width: 100%; padding: 14px; border: 1px solid #EADCC9; border-radius: 12px; background-color: #FAF6F0; color: #2E1A1C; font-size: 15px; outline: none; }
-        input:focus { border-color: #2E1A1C; background-color: #FFFFFF; }
-        button { width: 100%; padding: 15px; background-color: #2E1A1C; color: #FFFFFF; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 5px; }
-        .toggle-link { display: block; text-align: center; margin-top: 20px; color: #2E1A1C; font-size: 14px; font-weight: 600; text-decoration: underline; cursor: pointer; }
-        .screen { display: none; }
-        .active-screen { display: block; }
-        .client-box { background-color: #FAF6F0; border-radius: 12px; padding: 15px; margin-top: 15px; border-left: 4px solid #C5A880; }
-        .logout-btn { background-color: #7A2E2E; margin-top: 25px; }
+        :root {
+          --marsala: #4A121A;
+          --marsala-light: #6E222D;
+          --gold: #D4AF37;
+          --bg-cream: #FAF6F0;
+        }
+
+        body {
+          font-family: 'Montserrat', sans-serif;
+          background-color: #CBD5E1; 
+          margin: 0;
+          padding: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .phone-container {
+          width: 100%;
+          max-width: 380px;
+          background-color: var(--bg-cream);
+          border-radius: 40px;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+          border: 8px solid #1a1a1a;
+          overflow: hidden;
+          box-sizing: border-box;
+          min-height: 690px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .app-screen { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+        .hidden { display: none !important; }
+
+        .admin-title {
+          font-size: 1.15rem;
+          color: var(--marsala);
+          font-weight: 600;
+          margin-top: 0;
+          border-bottom: 2px solid var(--gold);
+          padding-bottom: 8px;
+        }
+
+        .admin-title-requests {
+          font-size: 1rem;
+          color: var(--marsala);
+          font-weight: 600;
+          margin-top: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .badge {
+          background-color: #D32F2F;
+          color: white;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 0.75rem;
+        }
+
+        .card-box {
+          background: white;
+          border-radius: 20px;
+          padding: 20px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+          border: 1px solid #F0E6DF;
+          margin-bottom: 15px;
+        }
+
+        .toggle-link {
+          color: var(--marsala);
+          font-size: 0.78rem;
+          text-align: center;
+          margin-top: 15px;
+          margin-bottom: 0;
+          cursor: pointer;
+          text-decoration: underline;
+          font-weight: 600;
+        }
+
+        .input-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.75rem; color: #666; margin-bottom: 5px; font-weight: 600; }
+        .input-group input {
+          padding: 12px;
+          border: 1px solid #DCD0C9;
+          border-radius: 10px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 0.9rem;
+          color: #1a1a1a;
+          background-color: #fff;
+        }
+        .input-group input:focus { outline: none; border-color: var(--marsala); }
+
+        .btn-main {
+          width: 100%;
+          padding: 14px;
+          background-color: var(--marsala);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+        }
+
+        .btn-logout {
+          width: 100%;
+          padding: 8px;
+          background-color: transparent;
+          color: #a29591;
+          border: none;
+          cursor: pointer;
+          font-size: 0.75rem;
+          margin-top: auto;
+          text-decoration: underline;
+        }
+
+        .request-item { background: #FFF7F7; border: 1px solid #F5E6E6; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+        .btn-approve { background-color: #2E7D32; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: 600; margin-right: 5px; }
+        .btn-reject { background-color: transparent; color: #C62828; border: 1px solid #C62828; padding: 5px 11px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div id="screen-login" class="screen active-screen">
-            <div class="card">
-                <h2>Painel Studio - Login</h2>
-                <div class="gold-line"></div>
-                <div class="form-group">
-                    <label>Usuário Administrador:</label>
-                    <input type="text" id="login-user" placeholder="Ex: adolfo">
-                </div>
-                <div class="form-group">
-                    <label>Senha de Acesso:</label>
-                    <input type="password" id="login-pass" placeholder="........">
-                </div>
-                <button onclick="realizarLogin()">Entrar no Painel</button>
-                <span class="toggle-link" onclick="mudarTela('screen-cadastro')">Cadastrar Novo Administrador</span>
-            </div>
-        </div>
-
-        <div id="screen-cadastro" class="screen">
-            <div class="card">
-                <h2>Painel Studio - Cadastro</h2>
-                <div class="gold-line"></div>
-                <div class="form-group">
-                    <label>Escolha um Usuário:</label>
-                    <input type="text" id="reg-user" placeholder="Ex: adolfo">
-                </div>
-                <div class="form-group">
-                    <label>Escolha uma Senha:</label>
-                    <input type="password" id="reg-pass" placeholder="........">
-                </div>
-                <button onclick="realizarCadastro()">Salvar Cadastro</button>
-                <span class="toggle-link" onclick="mudarTela('screen-login')">Voltar para o Login</span>
-            </div>
-        </div>
-
-        <div id="screen-dashboard" class="screen">
-            <div class="card">
-                <h2>Controle Interno</h2>
-                <div class="gold-line"></div>
-                <h3>Buscar Cliente</h3>
-                <div class="form-group">
-                    <label>Telefone da Cliente:</label>
-                    <input type="tel" id="search-phone" placeholder="Ex: 71999999999">
-                </div>
-                <button onclick="buscarCliente()">Consultar Telefone</button>
-                
-                <div id="client-result" style="display: none;">
-                    <div class="client-box">
-                        <p><strong>Nome:</strong> <span id="res-name">...</span></p>
-                        <p><strong>Pontos Atuais:</strong> <span id="res-points">0</span></p>
-                    </div>
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label>Quantidade de Pontos a Lançar:</label>
-                        <input type="number" id="add-points-input" placeholder="Ex: 10">
-                    </div>
-                    <button onclick="lancarPontos()" style="background-color: #C5A880;">Confirmar Lançamento</button>
-                </div>
-                <button onclick="fazerLogout()" class="logout-btn">Sair do Painel</button>
-            </div>
-        </div>
+<div class="phone-container">
+  <div id="admin-screen" class="app-screen">
+    
+    <div id="admin-login-area" class="card-box" style="margin-top: 30px;">
+      <h2 class="admin-title">Painel Studio - Login</h2>
+      <div class="input-group">
+        <label>Usuário Administrador:</label>
+        <input type="text" id="admin-login-user" placeholder="Ex: adolfo">
+      </div>
+      <div class="input-group">
+        <label>Senha de Acesso:</label>
+        <input type="password" id="admin-login-pass" placeholder="••••••••">
+      </div>
+      <button class="btn-main" onclick="handleAdminLogin()">Entrar no Painel</button>
+      <p class="toggle-link" onclick="showAdminScreen('register')">Cadastrar Novo Administrador</p>
     </div>
 
-    <script>
-        // ⚠️ ATENÇÃO: COLE AQUI AS SUAS CHAVES REAIS DO CODEPEN ⚠️
-    const firebaseConfig = {
+    <div id="admin-register-area" class="card-box hidden" style="margin-top: 30px;">
+      <h2 class="admin-title">Cadastrar Administrador</h2>
+      <div class="input-group">
+        <label>Defina o Usuário:</label>
+        <input type="text" id="admin-reg-user" placeholder="Ex: adolfo">
+      </div>
+      <div class="input-group">
+        <label>Defina a Senha:</label>
+        <input type="password" id="admin-reg-pass" placeholder="Senha segura">
+      </div>
+      <button class="btn-main" onclick="handleAdminRegister()">Registrar Admin</button>
+      <p class="toggle-link" onclick="showAdminScreen('login')">Voltar para o Login</p>
+    </div>
+
+    <div id="admin-main-area" class="hidden">
+      <div class="card-box">
+        <h2 class="admin-title">Painel do Studio</h2>
+        <p style="font-size: 0.85rem; color: #555; margin-bottom: 15px;">Envie pontos informando o celular cadastrado:</p>
+        <div class="input-group">
+          <label>Celular da Cliente (apenas números com DDD):</label>
+          <input type="tel" id="admin-client-phone" placeholder="Ex: 71999999999">
+        </div>
+        <div class="input-group">
+          <label>Quantidade de Pontos:</label>
+          <input type="number" id="admin-points-amount" placeholder="Ex: 50">
+        </div>
+        <button class="btn-main" onclick="addPointsAdmin()">Enviar Pontos</button>
+      </div>
+
+      <div class="card-box" style="margin-top: 15px;">
+        <h3 class="admin-title-requests">Pedidos de Resgate Pendentes <span id="admin-badge" class="badge hidden">0</span></h3>
+        <div id="admin-requests-list">
+          <p style="font-size: 0.85rem; color: #777;">Nenhuma solicitação no momento.</p>
+        </div>
+      </div>
+      
+      <button class="btn-logout" onclick="handleAdminLogout()">Sair do Painel Admin</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = {
   apiKey: "AIzaSyAOAACf0SRMozCLcd3eAXIRqrb8uvaSJWA",
   authDomain: "essencia-feninina.firebaseapp.com",
   databaseURL: "https://essencia-feninina-default-rtdb.firebaseio.com",
@@ -112,7 +212,6 @@
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Começa a escutar os pedidos assim que liga o painel
 startAdminListener();
 
 function showAdminScreen(screen) {
@@ -139,7 +238,7 @@ function handleAdminRegister() {
     showAdminScreen('login');
     document.getElementById('admin-reg-user').value = "";
     document.getElementById('admin-reg-pass').value = "";
-  });
+  }).catch(err => alert("Erro ao cadastrar: " + err.message));
 }
 
 function handleAdminLogin() {
@@ -155,7 +254,7 @@ function handleAdminLogin() {
     } else {
       alert("Usuário ou senha administrador inválidos.");
     }
-  });
+  }).catch(err => alert("Erro ao conectar: " + err.message));
 }
 
 function handleAdminLogout() {
@@ -273,3 +372,13 @@ function processRequest(reqId, action) {
     alert("Pedido processado!");
   }).catch(err => alert("Erro: " + err.message));
 }
+
+// Registro do Service Worker para Instalação PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+  .then(() => console.log("Instalador PWA Ativo"))
+  .catch(err => console.log("Erro no instalador:", err));
+}
+</script>
+</body>
+</html>
