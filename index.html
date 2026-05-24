@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essência Feminina - Painel Admin</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2E1A1C">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EF Admin">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --marsala: #4A121A;
+      --gold: #D4AF37;
+      --brown: #2E1A1C;
+      --bg-cream: #FAF6F0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #D6CFC7;
+      margin: 0;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .phone-container {
+      width: 100%;
+      max-width: 380px;
+      background-color: var(--bg-cream);
+      border-radius: 40px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      border: 8px solid var(--brown);
+      overflow: hidden;
+      box-sizing: border-box;
+      min-height: 690px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-screen { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+    .hidden { display: none !important; }
+    
+    .studio-title { font-family: 'Alex Brush', cursive; font-size: 2.6rem; color: var(--marsala); margin: 5px 0 0 0; text-align: center; }
+    .studio-subtitle { font-size: 0.65rem; letter-spacing: 4px; color: var(--gold); text-align: center; margin: 0 0 20px 0; font-weight: 600; }
+    
+    .card-box { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #F0E6DF; margin-bottom: 15px; }
+    .section-title { font-size: 1.05rem; color: var(--brown); margin-top: 0; margin-bottom: 15px; font-weight: 600; text-align: center; }
+    
+    .input-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+    .input-group label { font-size: 0.75rem; color: #666; margin-bottom: 5px; font-weight: 600; }
+    .input-group input { padding: 12px; border: 1px solid #DCD0C9; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; background-color: #FCFBF9; }
+    
+    .btn-main { width: 100%; padding: 14px; background-color: var(--marsala); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+    .btn-logout { background-color: transparent; color: #a29591; border: none; text-decoration: underline; font-size: 0.75rem; margin-top: 15px; cursor: pointer; }
+    
+    .nav-tabs { display: flex; justify-content: space-between; margin-bottom: 15px; background: #EFEAE4; padding: 4px; border-radius: 8px; }
+    .tab-btn { flex: 1; padding: 8px; background: transparent; border: none; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; color: #776c68; cursor: pointer; border-radius: 6px; text-align: center; }
+    .tab-btn.active { background: white; color: var(--marsala); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    
+    .client-info-display { background: #FDFBF7; padding: 10px; border-radius: 8px; border-left: 4px solid var(--marsala); margin-bottom: 10px; font-size: 0.8rem; }
+    .badge-points { background: var(--marsala); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+    
+    .request-item { background: #FAF8F5; padding: 10px; border-radius: 8px; border: 1px solid #EAE1DA; margin-bottom: 8px; font-size: 0.75rem; }
+    .btn-action { padding: 6px 12px; border: none; border-radius: 6px; font-weight: 600; font-size: 0.75rem; cursor: pointer; color: white; margin-right: 5px; }
+    .btn-approve { background-color: #2e7d32; }
+    .btn-reject { background-color: #c62828; }
+    
+    .studio-footer { text-align: center; margin-top: auto; padding-top: 15px; border-top: 1px solid #E6DFD5; }
+    .footer-text { font-size: 0.75rem; color: var(--marsala); font-weight: 600; margin: 0; }
+  </style>
+</head>
+<body>
+
+<div class="phone-container">
+  <div class="app-screen">
+    <div class="brand-header">
+      <h2 class="studio-title">Painel Admin</h2>
+      <p class="studio-subtitle">ESSÊNCIA FEMININA</p>
+    </div>
+
+    <div id="admin-login-area" class="card-box">
+      <h3 class="section-title">Acesso Restrito</h3>
+      <div class="input-group">
+        <label>Usuário Master:</label>
+        <input type="text" id="admin-user" placeholder="Usuário">
+      </div>
+      <div class="input-group">
+        <label>Senha de Acesso:</label>
+        <input type="password" id="admin-pass" placeholder="••••••••">
+      </div>
+      <button class="btn-main" onclick="handleAdminLogin()">Entrar no Painel</button>
+    </div>
+
+    <div id="admin-main-area" class="hidden">
+      <div class="nav-tabs">
+        <div id="tab-points" class="tab-btn active" onclick="switchAdminTab('points')">Pontuar</div>
+        <div id="tab-requests" class="tab-btn" onclick="switchAdminTab('requests')">Resgates (<span id="admin-req-count">0</span>)</div>
+      </div>
+
+      <div id="area-points" class="card-box">
+        <h3 class="section-title">Buscar Cliente</h3>
+        <div class="input-group">
+          <label>Celular da Cliente (com DDD):</label>
+          <input type="tel" id="search-phone" placeholder="Ex: 71999999999">
+        </div>
+        <button class="btn-main" style="margin-bottom: 15px;" onclick="searchClient()">Buscar Cliente</button>
+
+        <div id="client-result-area" class="hidden">
+          <div class="client-info-display">
+            <strong>Nome:</strong> <span id="res-name">-</span><br>
+            <strong>Saldo:</strong> <span class="badge-points" id="res-points">0 pts</span>
+          </div>
+          <div class="input-group">
+            <label>Pontos (Use + para somar ou - para tirar):</label>
+            <input type="number" id="points-change" placeholder="Ex: 10 ou -5">
+          </div>
+          <div class="input-group">
+            <label>Motivo do Lançamento:</label>
+            <input type="text" id="points-reason" placeholder="Ex: Manicure">
+          </div>
+          <button class="btn-main" onclick="updateClientPoints()">Lançar Pontuação</button>
+        </div>
+      </div>
+
+      <div id="area-requests" class="card-box hidden">
+        <h3 class="section-title">Pedidos Pendentes</h3>
+        <div id="requests-list-container">
+          <p style="font-size: 0.8rem; color:#888; text-align:center;">Nenhuma solicitação.</p>
+        </div>
+      </div>
+
+      <center><button class="btn-logout" onclick="handleAdminLogout()">Sair do Painel</button></center>
+    </div>
+
+    <div class="studio-footer">
+      <p class="footer-text">⚙️ Painel de Controle Interno</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Registro Automático do Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('Guardião Admin Ativo!'))
+      .catch(err => console.log('Erro SW:', err));
+  }
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyAOAACf0SRMozCLcd3eAXIRqrb8uvaSJWA",
+    authDomain: "essencia-feninina.firebaseapp.com",
+    databaseURL: "https://essencia-feninina-default-rtdb.firebaseio.com",
+    projectId: "essencia-feninina",
+    storageBucket: "essencia-feninina.firebasestorage.app",
+    messagingSenderId: "646470186154",
+    appId: "1:646470186154:web:e109b6a4bbe9a1c67bccd3"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  let currentSelectedClientPhone = null;
+
+  // LOGIN DO ADMINISTRADOR
+  function handleAdminLogin() {
+    const user = document.getElementById('admin-user').value.trim();
+    const pass = document.getElementById('admin-pass').value.trim();
+
+    if (user === "admin" && pass === "admin123") {
+      document.getElementById('admin-login-area').classList.add('hidden');
+      document.getElementById('admin-main-area').classList.remove('hidden');
+      startRequestsListener();
+    } else {
+      alert("Usuário ou senha incorretos!");
+    }
+  }
+
+  function handleAdminLogout() {
+    document.getElementById('admin-main-area').classList.add('hidden');
+    document.getElementById('admin-login-area').classList.remove('hidden');
+    db.ref('pedidos').off();
+  }
+
+  // NAVEGAÇÃO DE ABAS INTERNAS
+  function switchAdminTab(tab) {
+    document.getElementById('tab-points').classList.remove('active');
+    document.getElementById('tab-requests').classList.remove('active');
+    document.getElementById('area-points').classList.add('hidden');
+    document.getElementById('area-requests').classList.add('hidden');
+    
+    if(tab === 'points') {
+      document.getElementById('tab-points').classList.add('active');
+      document.getElementById('area-points').classList.remove('hidden');
+    } else {
+      document.getElementById('tab-requests').classList.add('active');
+      document.getElementById('area-requests').classList.remove('hidden');
+    }
+  }
+
+  // BUSCAR CLIENTE
+  function searchClient() {
+    const phone = document.getElementById('search-phone').value.replace(/\D/g, "");
+    if(!phone) { alert("Digite o celular."); return; }
+    
+    db.ref('clientes/' + phone).once('value').then((snapshot) => {
+      if(snapshot.exists()) {
+        const data = snapshot.val();
+        currentSelectedClientPhone = phone;
+        document.getElementById('res-name').innerText = data.nome;
+        document.getElementById('res-points').innerText = data.pontos + " pts";
+        document.getElementById('client-result-area').classList.remove('hidden');
+      } else {
+        alert("Cliente não cadastrada.");
+        document.getElementById('client-result-area').classList.add('hidden');
+      }
+    });
+  }
+
+  // LANÇAR PONTUAÇÃO
+  function updateClientPoints() {
+    if(!currentSelectedClientPhone) return;
+    const changeValue = parseInt(document.getElementById('points-change').value);
+    const reason = document.getElementById('points-reason').value.trim() || "Serviço no Estúdio";
+    
+    if(isNaN(changeValue) || changeValue === 0) { alert("Digite um valor válido."); return; }
+
+    const clientRef = db.ref('clientes/' + currentSelectedClientPhone);
+    clientRef.once('value').then((snapshot) => {
+      const data = snapshot.val();
+      let newPoints = (data.pontos || 0) + changeValue;
+      if(newPoints < 0) newPoints = 0;
+      
+      const dataAtual = new Date().toLocaleDateString('pt-BR');
+      const logMsg = `${dataAtual} - ${changeValue > 0 ? "+" : ""}${changeValue} pts (${reason})`;
+      
+      let historicoArr = data.historico ? (Array.isArray(data.historico) ? data.historico : Object.values(data.historico)) : [];
+      historicoArr.push(logMsg);
+      
+      clientRef.update({ pontos: newPoints, historico: historicoArr }).then(() => {
+        alert("Pontos atualizados!");
+        document.getElementById('res-points').innerText = newPoints + " pts";
+        document.getElementById('points-change').value = "";
+        document.getElementById('points-reason').value = "";
+      });
+    });
+  }
+
+  // OUVIR PEDIDOS DE RESGATE
+  function startRequestsListener() {
+    db.ref('pedidos').on('value', (snapshot) => {
+      const container = document.getElementById('requests-list-container');
+      let count = 0;
+      if(!snapshot.exists()) {
+        container.innerHTML = "<p style='text-align:center;font-size:0.8rem;color:#888;'>Nenhum pedido pendente.</p>";
+        document.getElementById('admin-req-count').innerText = "0";
+        return;
+      }
+      
+      let html = "";
+      snapshot.forEach((child) => {
+        const id = child.key;
+        const pedido = child.val();
+        if(pedido.status === 'pendente') {
+          count++;
+          html += `
+            <div class="request-item">
+              <strong>${pedido.cliente}</strong> (${pedido.clienteId})<br>
+              Pediu resgate de: <span style="color:var(--marsala);font-weight:bold">${pedido.quantidade} pts</span>
+              <div style="margin-top:5px;">
+                <button class="btn-action btn-approve" onclick="processRedeem('${id}','${pedido.clienteId}',${pedido.quantidade},'aprovar')">Aprovar</button>
+                <button class="btn-action btn-reject" onclick="processRedeem('${id}','${pedido.clienteId}',${pedido.quantidade},'recusar')">Recusar</button>
+              </div>
+            </div>`;
+        }
+      });
+      document.getElementById('admin-req-count').innerText = count;
+      container.innerHTML = count === 0 ? "<p style='text-align:center;font-size:0.8rem;color:#888;'>Nenhum pedido pendente.</p>" : html;
+    });
+  }
+
+  // PROCESSAR PEDIDOS
+  function processRedeem(pedidoId, clienteId, quantidade, acao) {
+    if(acao === 'aprovar') {
+      const clientRef = db.ref('clientes/' + clienteId);
+      clientRef.once('value').then((snapshot) => {
+        const data = snapshot.val();
+        let novosPontos = data.pontos - quantidade;
+        if(novosPontos < 0) novosPontos = 0;
+        
+        const dataAtual = new Date().toLocaleDateString('pt-BR');
+        const logMsg = `${dataAtual} - -${quantidade} pts (Resgate de Prêmio Aprovado)`;
+        
+        let historicoArr = data.historico ? (Array.isArray(data.historico) ? data.historico : Object.values(data.historico)) : [];
+        historicoArr.push(logMsg);
+        
+        clientRef.update({ pontos: novosPontos, historico: historicoArr }).then(() => {
+          db.ref('pedidos/' + pedidoId).update({ status: 'aprovado' });
+          alert("Resgate aprovado!");
+        });
+      });
+    } else {
+      db.ref('pedidos/' + pedidoId).update({ status: 'recusado' }).then(() => {
+        alert("Pedido recusado.");
+      });
+    }
+  }
+</script>
+</body>
+</html>

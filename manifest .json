@@ -1,0 +1,20 @@
+{
+  "name": "Essência Feminina - Admin",
+  "short_name": "EF Admin",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FAF6F0",
+  "theme_color": "#2E1A1C",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
