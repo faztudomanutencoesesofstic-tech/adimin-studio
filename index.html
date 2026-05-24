@@ -14,175 +14,40 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <style>
-        /* ==========================================
-           1. ESTILOS DO CODEPEN (CSS UNIFICADO)
-           ========================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        body {
-            background-color: #FAF6F0;
-            color: #2E1A1C;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* Moldura elegante simulando o aplicativo */
-        .app-container {
-            width: 100%;
-            max-width: 400px;
-            background-color: #FAF6F0;
-            border: 4px solid #2E1A1C;
-            border-radius: 40px;
-            padding: 30px 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        /* Cartão Branco Interno */
-        .card {
-            background-color: #FFFFFF;
-            border-radius: 24px;
-            padding: 25px 20px;
-            box-shadow: 0 4px 15px rgba(46, 26, 28, 0.05);
-            width: 100%;
-        }
-
-        /* Cabeçalhos e Títulos */
-        h2 {
-            color: #2E1A1C;
-            font-size: 22px;
-            text-align: center;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .gold-line {
-            width: 100%;
-            height: 2px;
-            background-color: #C5A880;
-            margin-bottom: 25px;
-        }
-
-        h3 {
-            color: #2E1A1C;
-            font-size: 16px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #EADCC9;
-            padding-bottom: 5px;
-        }
-
-        /* Formulários e Inputs */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #5A4A42;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #EADCC9;
-            border-radius: 12px;
-            background-color: #FAF6F0;
-            color: #2E1A1C;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            border-color: #2E1A1C;
-            background-color: #FFFFFF;
-        }
-
-        /* Botões */
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #2E1A1C;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 5px;
-        }
-
-        button:hover {
-            background-color: #4A2E31;
-        }
-
-        /* Links de Alternância */
-        .toggle-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #2E1A1C;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        /* Telas Ocultas por Padrão */
-        .screen {
-            display: none;
-        }
-
-        .active-screen {
-            display: block;
-        }
-
-        /* Estilos do Painel de Controle Ativo */
-        .client-box {
-            background-color: #FAF6F0;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            border-left: 4px solid #C5A880;
-        }
-
-        .logout-btn {
-            background-color: #7A2E2E;
-            margin-top: 25px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+        body { background-color: #FAF6F0; color: #2E1A1C; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .app-container { width: 100%; max-width: 400px; background-color: #FAF6F0; border: 4px solid #2E1A1C; border-radius: 40px; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card { background-color: #FFFFFF; border-radius: 24px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(46, 26, 28, 0.05); }
+        h2 { color: #2E1A1C; font-size: 22px; text-align: center; font-weight: 700; margin-bottom: 8px; }
+        .gold-line { width: 100%; height: 2px; background-color: #C5A880; margin-bottom: 25px; }
+        h3 { color: #2E1A1C; font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #EADCC9; padding-bottom: 5px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 14px; font-weight: 600; color: #5A4A42; margin-bottom: 8px; }
+        input { width: 100%; padding: 14px; border: 1px solid #EADCC9; border-radius: 12px; background-color: #FAF6F0; color: #2E1A1C; font-size: 15px; outline: none; }
+        input:focus { border-color: #2E1A1C; background-color: #FFFFFF; }
+        button { width: 100%; padding: 15px; background-color: #2E1A1C; color: #FFFFFF; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 5px; }
+        .toggle-link { display: block; text-align: center; margin-top: 20px; color: #2E1A1C; font-size: 14px; font-weight: 600; text-decoration: underline; cursor: pointer; }
+        .screen { display: none; }
+        .active-screen { display: block; }
+        .client-box { background-color: #FAF6F0; border-radius: 12px; padding: 15px; margin-top: 15px; border-left: 4px solid #C5A880; }
+        .logout-btn { background-color: #7A2E2E; margin-top: 25px; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
         <div id="screen-login" class="screen active-screen">
             <div class="card">
                 <h2>Painel Studio - Login</h2>
                 <div class="gold-line"></div>
-                
                 <div class="form-group">
                     <label>Usuário Administrador:</label>
                     <input type="text" id="login-user" placeholder="Ex: adolfo">
                 </div>
-                
                 <div class="form-group">
                     <label>Senha de Acesso:</label>
                     <input type="password" id="login-pass" placeholder="........">
                 </div>
-                
                 <button onclick="realizarLogin()">Entrar no Painel</button>
                 <span class="toggle-link" onclick="mudarTela('screen-cadastro')">Cadastrar Novo Administrador</span>
             </div>
@@ -192,17 +57,14 @@
             <div class="card">
                 <h2>Painel Studio - Cadastro</h2>
                 <div class="gold-line"></div>
-                
                 <div class="form-group">
                     <label>Escolha um Usuário:</label>
                     <input type="text" id="reg-user" placeholder="Ex: adolfo">
                 </div>
-                
                 <div class="form-group">
                     <label>Escolha uma Senha:</label>
                     <input type="password" id="reg-pass" placeholder="........">
                 </div>
-                
                 <button onclick="realizarCadastro()">Salvar Cadastro</button>
                 <span class="toggle-link" onclick="mudarTela('screen-login')">Voltar para o Login</span>
             </div>
@@ -212,7 +74,6 @@
             <div class="card">
                 <h2>Controle Interno</h2>
                 <div class="gold-line"></div>
-                
                 <h3>Buscar Cliente</h3>
                 <div class="form-group">
                     <label>Telefone da Cliente:</label>
@@ -225,150 +86,190 @@
                         <p><strong>Nome:</strong> <span id="res-name">...</span></p>
                         <p><strong>Pontos Atuais:</strong> <span id="res-points">0</span></p>
                     </div>
-                    
                     <div class="form-group" style="margin-top: 15px;">
                         <label>Quantidade de Pontos a Lançar:</label>
                         <input type="number" id="add-points-input" placeholder="Ex: 10">
                     </div>
                     <button onclick="lancarPontos()" style="background-color: #C5A880;">Confirmar Lançamento</button>
                 </div>
-
                 <button onclick="fazerLogout()" class="logout-btn">Sair do Painel</button>
             </div>
         </div>
-
     </div>
 
     <script>
-        // CONFIGURAÇÃO DO SEU FIREBASE
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY_AQUI",
-            authDomain: "SEU_AUTH_DOMAIN_AQUI",
-            databaseURL: "SEU_DATABASE_URL_AQUI",
-            projectId: "SEU_PROJECT_ID_AQUI",
-            storageBucket: "SEU_STORAGE_BUCKET_AQUI",
-            messagingSenderId: "SEU_MESSAGING_ID_AQUI",
-            appId: "SEU_APP_ID_AQUI"
-        };
+        // ⚠️ ATENÇÃO: COLE AQUI AS SUAS CHAVES REAIS DO CODEPEN ⚠️
+    const firebaseConfig = {
+  apiKey: "AIzaSyAOAACf0SRMozCLcd3eAXIRqrb8uvaSJWA",
+  authDomain: "essencia-feninina.firebaseapp.com",
+  databaseURL: "https://essencia-feninina-default-rtdb.firebaseio.com",
+  projectId: "essencia-feninina",
+  storageBucket: "essencia-feninina.firebasestorage.app",
+  messagingSenderId: "646470186154",
+  appId: "1:646470186154:web:e109b6a4bbe9a1c67bccd3"
+};
 
-        // Inicializa o Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Começa a escutar os pedidos assim que liga o painel
+startAdminListener();
+
+function showAdminScreen(screen) {
+  document.getElementById('admin-login-area').classList.add('hidden');
+  document.getElementById('admin-register-area').classList.add('hidden');
+  document.getElementById('admin-main-area').classList.add('hidden');
+  
+  if(screen === 'login') document.getElementById('admin-login-area').classList.remove('hidden');
+  if(screen === 'register') document.getElementById('admin-register-area').classList.remove('hidden');
+  if(screen === 'main') document.getElementById('admin-main-area').classList.remove('hidden');
+}
+
+function handleAdminRegister() {
+  const user = document.getElementById('admin-reg-user').value.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+  const password = document.getElementById('admin-reg-pass').value.trim();
+  
+  if(!user || !password) { alert("Preencha todos os dados."); return; }
+  
+  db.ref('admins/' + user).set({
+    usuario: user,
+    senha: password
+  }).then(() => {
+    alert("Administrador cadastrado!");
+    showAdminScreen('login');
+    document.getElementById('admin-reg-user').value = "";
+    document.getElementById('admin-reg-pass').value = "";
+  });
+}
+
+function handleAdminLogin() {
+  const user = document.getElementById('admin-login-user').value.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+  const password = document.getElementById('admin-login-pass').value.trim();
+  
+  if(!user || !password) { alert("Informe usuário e senha."); return; }
+  
+  db.ref('admins/' + user).once('value').then((snapshot) => {
+    if(snapshot.exists() && snapshot.val().senha === password) {
+      showAdminScreen('main');
+      document.getElementById('admin-login-pass').value = "";
+    } else {
+      alert("Usuário ou senha administrador inválidos.");
+    }
+  });
+}
+
+function handleAdminLogout() {
+  showAdminScreen('login');
+}
+
+function addPointsAdmin() {
+  const clientPhone = document.getElementById('admin-client-phone').value.replace(/\D/g, "");
+  const pointsToAdd = parseInt(document.getElementById('admin-points-amount').value);
+  
+  if(!clientPhone || isNaN(pointsToAdd) || pointsToAdd <= 0) {
+    alert("Insira celular e pontos válidos.");
+    return;
+  }
+  
+  const clientRef = db.ref('clientes/' + clientPhone);
+  clientRef.once('value').then((snapshot) => {
+    if(!snapshot.exists()) {
+      alert("Esta cliente ainda não tem cadastro no aplicativo!");
+      return;
+    }
+    
+    const data = snapshot.val();
+    let pontosAtuais = data.pontos || 0;
+    let historicoAtual = Array.isArray(data.historico) ? data.historico : Object.values(data.historico || {});
+    
+    historicoAtual.push(`+${pointsToAdd} pontos recebidos do Studio.`);
+    
+    clientRef.update({
+      pontos: pontosAtuais + pointsToAdd,
+      historico: historicoAtual
+    }).then(() => {
+      alert(`Sucesso! ${pointsToAdd} pontos creditados.`);
+      document.getElementById('admin-client-phone').value = "";
+      document.getElementById('admin-points-amount').value = "";
+    });
+  }).catch(err => alert("Erro ao computar pontos: " + err.message));
+}
+
+function startAdminListener() {
+  db.ref('pedidos').on('value', (snapshot) => {
+    const container = document.getElementById('admin-requests-list');
+    const badge = document.getElementById('admin-badge');
+    
+    if(!snapshot.exists()) {
+      badge.classList.add('hidden');
+      container.innerHTML = "<p style='font-size: 0.85rem; color: #777;'>Nenhum pedido de resgate no momento.</p>";
+      return;
+    }
+    
+    let html = "";
+    let count = 0;
+    
+    snapshot.forEach((childSnapshot) => {
+      const reqId = childSnapshot.key;
+      const req = childSnapshot.val();
+      
+      if(req.status === 'pendente') {
+        count++;
+        html += `
+          <div class="request-item">
+            <p style="margin: 0 0 8px 0; font-size: 0.85rem; color: #333;">
+              <strong>${req.cliente} (Cel: ${req.clienteId})</strong> solicita resgatar <strong>${req.quantidade} pts</strong>.
+            </p>
+            <button class="btn-approve" onclick="processRequest('${reqId}', 'aprovar')">Confirmar</button>
+            <button class="btn-reject" onclick="processRequest('${reqId}', 'recusar')">Recusar</button>
+          </div>
+        `;
+      }
+    });
+    
+    if(count > 0) {
+      badge.innerText = count;
+      badge.classList.remove('hidden');
+      container.innerHTML = html;
+    } else {
+      badge.classList.add('hidden');
+      container.innerHTML = "<p style='font-size: 0.85rem; color: #777;'>Nenhum pedido de resgate no momento.</p>";
+    }
+  });
+}
+
+function processRequest(reqId, action) {
+  const reqRef = db.ref('pedidos/' + reqId);
+  reqRef.once('value').then((snapshot) => {
+    if(!snapshot.exists()) return;
+    const reqData = snapshot.val();
+    
+    if(action === 'aprovar') {
+      const clientRef = db.ref('clientes/' + reqData.clienteId);
+      return clientRef.once('value').then((cSnapshot) => {
+        if(!cSnapshot.exists()) return;
+        const cData = cSnapshot.val();
+        const pontosAtuais = cData.pontos || 0;
+        let historicoAtual = Array.isArray(cData.historico) ? cData.historico : Object.values(cData.historico || {});
+        
+        if(reqData.quantidade > pontosAtuais) {
+          alert("A cliente não possui saldo suficiente.");
+          return reqRef.update({ status: 'recusado_por_saldo_insuficiente' });
         }
-        const database = firebase.database();
-
-        // Função para alternar de tela no aplicativo
-        function mudarTela(telaId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active-screen');
-            });
-            document.getElementById(telaId).classList.add('active-screen');
-        }
-
-        // 1. Lógica de Cadastro de Administrador
-        function realizarCadastro() {
-            const user = document.getElementById('reg-user').value.trim().toLowerCase();
-            const pass = document.getElementById('reg-pass').value.trim();
-
-            if (!user || !pass) {
-                alert("Preencha todos os campos para cadastrar!");
-                return;
-            }
-
-            database.ref('admins/' + user).set({
-                password: pass
-            }).then(() => {
-                alert("Administrador cadastrado com sucesso!");
-                mudarTela('screen-login');
-                document.getElementById('reg-user').value = '';
-                document.getElementById('reg-pass').value = '';
-            }).catch(error => {
-                alert("Erro ao salvar cadastro: " + error.message);
-            });
-        }
-
-        // 2. Lógica de Login do Administrador
-        function realizarLogin() {
-            const user = document.getElementById('login-user').value.trim().toLowerCase();
-            const pass = document.getElementById('login-pass').value.trim();
-
-            if (!user || !pass) {
-                alert("Por favor, digite o usuário e a senha.");
-                return;
-            }
-
-            database.ref('admins/' + user).once('value').then(snapshot => {
-                if (snapshot.exists() && snapshot.val().password === pass) {
-                    alert("Acesso autorizado!");
-                    mudarTela('screen-dashboard');
-                } else {
-                    alert("Usuário ou senha incorretos!");
-                }
-            });
-        }
-
-        // 3. Buscar Cliente por Telefone
-        let clienteAtualRef = null;
-
-        function buscarCliente() {
-            const phone = document.getElementById('search-phone').value.trim();
-            if (!phone) {
-                alert("Digite o telefone da cliente para consulting!");
-                return;
-            }
-
-            clienteAtualRef = database.ref('clientes/' + phone);
-            
-            clienteAtualRef.once('value').then(snapshot => {
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    document.getElementById('res-name').innerText = data.nome || "Sem Nome";
-                    document.getElementById('res-points').innerText = data.pontos || 0;
-                    document.getElementById('client-result').style.display = 'block';
-                } else {
-                    alert("Cliente não encontrada! Verifique o número.");
-                    document.getElementById('client-result').style.display = 'none';
-                }
-            });
-        }
-
-        // 4. Lançar Pontos para a Cliente
-        function lancarPontos() {
-            const pontosParaAdicionar = parseInt(document.getElementById('add-points-input').value);
-            if (isNaN(pontosParaAdicionar) || pontosParaAdicionar <= 0) {
-                alert("Digite uma quantidade válida de pontos!");
-                return;
-            }
-
-            if (clienteAtualRef) {
-                clienteAtualRef.once('value').then(snapshot => {
-                    let pontosAtuais = snapshot.val().pontos || 0;
-                    let novosPontos = pontosAtuais + pontosParaAdicionar;
-
-                    clienteAtualRef.update({ pontos: novosPontos }).then(() => {
-                        alert("Pontos creditados com sucesso!");
-                        document.getElementById('res-points').innerText = novosPontos;
-                        document.getElementById('add-points-input').value = '';
-                    });
-                });
-            }
-        }
-
-        // 5. Logout
-        function fazerLogout() {
-            document.getElementById('login-user').value = '';
-            document.getElementById('login-pass').value = '';
-            document.getElementById('client-result').style.display = 'none';
-            document.getElementById('search-phone').value = '';
-            mudarTela('screen-login');
-        }
-
-        // Registro Automático do Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-            .then(() => console.log("Service Worker registrado!"))
-            .catch(err => console.log("Erro no Service Worker:", err));
-        }
-    </script>
-</body>
-</html>
+        
+        historicoAtual.push(`-${reqData.quantidade} pontos resgatados (Aprovado pelo Studio).`);
+        
+        return clientRef.update({
+          pontos: pontosAtuais - reqData.quantidade,
+          historico: historicoAtual
+        }).then(() => {
+          return reqRef.update({ status: 'aprovado' });
+        });
+      });
+    } else {
+      return reqRef.update({ status: 'recusado' });
+    }
+  }).then(() => {
+    alert("Pedido processado!");
+  }).catch(err => alert("Erro: " + err.message));
+}
