@@ -199,6 +199,11 @@
 </div>
 
 <script>
+// Diagnóstico de carregamento inicial
+if (typeof firebase === 'undefined') {
+  alert("Erro de Conexão: Os scripts do Firebase não carregaram. Verifique sua internet.");
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyAOAACf0SRMozCLcd3eAXIRqrb8uvaSJWA",
   authDomain: "essencia-feninina.firebaseapp.com",
@@ -209,19 +214,26 @@ const firebaseConfig = {
   appId: "1:646470186154:web:e109b6a4bbe9a1c67bccd3"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-startAdminListener();
+try {
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+  startAdminListener();
+} catch (e) {
+  alert("Erro Firebase: " + e.message);
+}
 
 function showAdminScreen(screen) {
-  document.getElementById('admin-login-area').classList.add('hidden');
-  document.getElementById('admin-register-area').classList.add('hidden');
-  document.getElementById('admin-main-area').classList.add('hidden');
+  const loginArea = document.getElementById('admin-login-area');
+  const registerArea = document.getElementById('admin-register-area');
+  const mainArea = document.getElementById('admin-main-area');
   
-  if(screen === 'login') document.getElementById('admin-login-area').classList.remove('hidden');
-  if(screen === 'register') document.getElementById('admin-register-area').classList.remove('hidden');
-  if(screen === 'main') document.getElementById('admin-main-area').classList.remove('hidden');
+  if(loginArea) loginArea.classList.add('hidden');
+  if(registerArea) registerArea.classList.add('hidden');
+  if(mainArea) mainArea.classList.add('hidden');
+  
+  if(screen === 'login' && loginArea) loginArea.classList.remove('hidden');
+  if(screen === 'register' && registerArea) registerArea.classList.remove('hidden');
+  if(screen === 'main' && mainArea) mainArea.classList.remove('hidden');
 }
 
 function handleAdminRegister() {
@@ -234,7 +246,7 @@ function handleAdminRegister() {
     usuario: user,
     senha: password
   }).then(() => {
-    alert("Administrador cadastrado!");
+    alert("Administrador cadastrado com sucesso!");
     showAdminScreen('login');
     document.getElementById('admin-reg-user').value = "";
     document.getElementById('admin-reg-pass').value = "";
@@ -249,6 +261,7 @@ function handleAdminLogin() {
   
   db.ref('admins/' + user).once('value').then((snapshot) => {
     if(snapshot.exists() && snapshot.val().senha === password) {
+      alert("Acesso autorizado!");
       showAdminScreen('main');
       document.getElementById('admin-login-pass').value = "";
     } else {
@@ -295,12 +308,14 @@ function addPointsAdmin() {
 }
 
 function startAdminListener() {
+  if (!db) return;
   db.ref('pedidos').on('value', (snapshot) => {
     const container = document.getElementById('admin-requests-list');
     const badge = document.getElementById('admin-badge');
+    if(!container) return;
     
     if(!snapshot.exists()) {
-      badge.classList.add('hidden');
+      if(badge) badge.classList.add('hidden');
       container.innerHTML = "<p style='font-size: 0.85rem; color: #777;'>Nenhum pedido de resgate no momento.</p>";
       return;
     }
@@ -327,13 +342,17 @@ function startAdminListener() {
     });
     
     if(count > 0) {
-      badge.innerText = count;
-      badge.classList.remove('hidden');
+      if(badge) {
+        badge.innerText = count;
+        badge.classList.remove('hidden');
+      }
       container.innerHTML = html;
     } else {
-      badge.classList.add('hidden');
+      if(badge) badge.classList.add('hidden');
       container.innerHTML = "<p style='font-size: 0.85rem; color: #777;'>Nenhum pedido de resgate no momento.</p>";
     }
+  }, (error) => {
+    console.log("Aviso de regras do banco de dados (ignorar se não logado):", error.message);
   });
 }
 
@@ -373,7 +392,6 @@ function processRequest(reqId, action) {
   }).catch(err => alert("Erro: " + err.message));
 }
 
-// Registro do Service Worker para Instalação PWA
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js')
   .then(() => console.log("Instalador PWA Ativo"))
