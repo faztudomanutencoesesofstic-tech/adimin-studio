@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Essência Feminina - Admin</title>
     
+    <link rel="manifest" href="manifest.json">
+    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -239,7 +241,6 @@
 
     <script>
         // CONFIGURAÇÃO DO SEU FIREBASE
-        // ATENÇÃO: Substitua os dados abaixo pelas chaves do seu projeto Firebase se necessário!
         const firebaseConfig = {
             apiKey: "SUA_API_KEY_AQUI",
             authDomain: "SEU_AUTH_DOMAIN_AQUI",
@@ -312,7 +313,7 @@
         function buscarCliente() {
             const phone = document.getElementById('search-phone').value.trim();
             if (!phone) {
-                alert("Digite o telefone da cliente para consultar!");
+                alert("Digite o telefone da cliente para consulting!");
                 return;
             }
 
@@ -362,13 +363,12 @@
             mudarTela('screen-login');
         }
 
-        // Registro Automático do Service Worker (Mantém o PWA ativo)
+        // Registro Automático do Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js')
-            .then(() => console.log("Service Worker registrado com sucesso!"))
+            .then(() => console.log("Service Worker registrado!"))
             .catch(err => console.log("Erro no Service Worker:", err));
         }
     </script>
 </body>
 </html>
-  
